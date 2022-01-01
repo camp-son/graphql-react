@@ -57,18 +57,18 @@ const Detail = () => {
     }
   });
 
-  if (loading) {
-    return 'loading...';
-  }
-
   return (
     <Container>
       <Column>
-        <Title>{ data.movie.title }</Title>
-        <SubTitle>{ data.movie.language } { data.movie.rating } </SubTitle>
-        <Description>{ data.movie.description_intro }</Description>
+        <Title>{ loading ? 'Loading...' : data.movie.title }</Title>
+        {!loading && (
+          <>
+            <SubTitle>{ data.movie.language } { data.movie.rating } </SubTitle>
+            <Description>{ data.movie.description_intro }</Description>
+          </>
+        )}
       </Column>
-      <Poster bg={ data.movie.medium_cover_image }></Poster>
+      {!loading && <Poster bg={ data.movie.medium_cover_image }></Poster>}
     </Container>
   )
 }
