@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import Movie from "../components/Movie";
 
 const GET_MOVIE = gql`
 query getMovie($id: Int!) {
@@ -12,6 +13,10 @@ query getMovie($id: Int!) {
     rating
     description_intro
   }
+  suggestions(id: $id) {
+    id
+    medium_cover_image
+  }
 }
 `;
 
@@ -20,14 +25,20 @@ const Container = styled.div`
   background-image: linear-gradient(-45deg, #d754ab, #fd723a);
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
   color: white;
 `;
-
 const Column = styled.div`
   margin-left: 10px;
   width: 50%;
+`;
+const MovieDetail = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
 `;
 const Title = styled.h1`
   font-size: 65px;
@@ -48,6 +59,15 @@ const Poster = styled.div`
   background-size: cover;
   background-position: center center;
 `;
+const Movies = styled.div`
+  position: relative;
+  top: 0;
+  display: flex;
+  width: 80%;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 20px;
+`
 
 const Detail = () => {
   const { id } = useParams();
@@ -58,18 +78,25 @@ const Detail = () => {
   });
 
   return (
-    <Container>
-      <Column>
-        <Title>{ loading ? 'Loading...' : data.movie.title }</Title>
-        {!loading && (
-          <>
-            <SubTitle>{ data.movie.language } { data.movie.rating } </SubTitle>
-            <Description>{ data.movie.description_intro }</Description>
-          </>
-        )}
-      </Column>
-      {!loading && <Poster bg={ data.movie.medium_cover_image }></Poster>}
-    </Container>
+      <Container>
+        <MovieDetail>
+          <Column>
+            <Title>{ loading ? 'Loading...' : data?.movie?.title }</Title>
+            {!loading && (
+              <>
+                <SubTitle>{ data?.movie?.language } { data?.movie?.rating } </SubTitle>
+                <Description>{ data?.movie?.description_intro }</Description>
+              </>
+            )}
+          </Column>
+          <Poster bg={ data?.movie?.medium_cover_image } />
+        </MovieDetail>
+        <Movies>
+          {data?.suggestions?.map((s) => (
+            <Movie id={s.id} bg={s.medium_cover_image} />
+          ))}
+        </Movies>
+      </Container>
   )
 }
 

@@ -66,7 +66,7 @@ const Home = () => {
       </Header>
       {loading && <Loading>Loading...</Loading>}
       <Movies>
-        {!loading && data.movies && data.movies.map((m) => (
+        {!loading && data?.movies.map((m) => (
           <Movie key={m.id} id={m.id} bg={m.medium_cover_image} />
         ))}
       </Movies>
